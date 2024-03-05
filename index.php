@@ -1,32 +1,18 @@
 <?php
-
 require_once 'src/CitationGenerator.php';
 
 $generator = new CitationGenerator();
 
-if (isset($_POST['exporter']) && !empty($_POST['citation'])) {
-    require_once 'src/ImageExporter.php';
+$citations = [];
+$nombreCitations = 1;
 
-    $citation = $_POST['citation'];
-    $dossierPolice = 'asset/font/';
-    $fichiersPolice = glob($dossierPolice . '*.ttf');
-
-    if($fichiersPolice) {
-        $cheminPolice = $fichiersPolice[array_rand($fichiersPolice)];
-    } else {
-        $cheminPolice = 'chemin/vers/une/police/par/defaut.ttf';
+if (isset($_GET['Citation'])) {
+    $nombreCitations = !empty($_GET['nombreCitations']) ? intval($_GET['nombreCitations']) : 1;
+    
+    for ($i = 0; $i < $nombreCitations; $i++) {
+        $citations[] = $generator->genererCitation();
     }
-
-    $cheminSortie = 'asset/image/citation.png';
-
-    ImageExporter::exporterEnImage($citation, $cheminPolice, $cheminSortie);
-
-    // Redirigez l'utilisateur vers l'image ou affichez un lien pour la télécharger
-    echo '<a href="' . $cheminSortie . '" download>Télécharger l\'image</a>';
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -40,20 +26,21 @@ if (isset($_POST['exporter']) && !empty($_POST['citation'])) {
     <div class="container">
         <h1>Générateur de Citations</h1>
         <form action="index.php" method="get">
-            <button type="submit" name="Citation">Générer une Citation</button>
+            <div>
+                <label for="nombreCitations">Nombre de citations à générer :</label>
+                <input type="number" id="nombreCitations" name="nombreCitations" min="1" value="<?php echo $nombreCitations; ?>">
+            </div>
+            <button type="submit" name="Citation">Générer des Citations</button>
         </form>
 
-        <?php
-        if (isset($_GET['Citation'])) {
-            echo '<p>"' . $generator->genererCitation() . '"</p>';
-        }
-        ?>
-
-        <form action="index.php" method="post">
-            <input type="hidden" name="citation" value="<?php echo htmlspecialchars($generator->genererCitation()); ?>">
-            <button type="submit" name="exporter">Exporter en Image</button>
-        </form>
-
+        <?php if (!empty($citations)): ?>
+        <div id="citation_result">
+            <?php foreach ($citations as $citation): ?>
+                <p><?php echo htmlspecialchars($citation); ?></p>
+                <a href="src/download.php?citation=<?php echo urlencode($citation); ?>" class="download-link">Télécharger en PNG</a>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
     </div>
 </body>
 </html>
