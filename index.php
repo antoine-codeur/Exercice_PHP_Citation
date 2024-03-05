@@ -23,12 +23,16 @@ if (isset($_POST['generate']) && $_POST['generate'] == 1) {
     for ($i = 0; $i < $nombreCitations; $i++) {
         $_SESSION['citations'][] = $generator->genererCitation();
     }
-    // Redirection vers la même page avec une méthode GET pour éviter la resoumission des données lors de l'actualisation
     header('Location: index.php');
     exit;
 }
 $citations = $_SESSION['citations'];
 $nombreCitations = $_SESSION['nombreCitations']; 
+
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+    include 'asset/template/Citation.php';
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr" data-theme="<?php echo $_SESSION['theme']; ?>">
@@ -47,12 +51,13 @@ $nombreCitations = $_SESSION['nombreCitations'];
                 <input type="number" id="nombreCitations" name="nombreCitations" min="1" value="<?php echo $nombreCitations; ?>">
             </div>
             <input type="hidden" name="generate" value="1">
-            <button id="Gen_Button" type="submit" name="Citation">Générer des Citations</button>
+            <button id="Gen_Button" type="button">Générer des Citations</button>
         </form>
 
         <?php include 'asset/template/Citation.php'; ?>
 
     </div>
+    <script src="asset/script/AJAX_CITATION.js"></script>
     <script src="asset/script/themeDark.js"></script>
 </body>
 </html>
