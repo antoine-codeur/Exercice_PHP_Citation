@@ -50,15 +50,7 @@ $nombreCitations = $_SESSION['nombreCitations'];
             <button id="Gen_Button" type="submit" name="Citation">Générer des Citations</button>
         </form>
 
-        <?php if (!empty($citations)): ?>
-            <div id="citation_result">
-                <?php foreach ($citations as $item): ?>
-                    <p><?php echo htmlspecialchars($item['citation']); ?></p>
-                    <p><em><?php echo htmlspecialchars($item['auteur']); ?></em></p>
-                    <a href="src/download.php?citation=<?php echo urlencode($item['citation']); ?>" class="download-link">Télécharger en PNG</a>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+        <?php include 'asset/template/Citation.php'; ?>
 
     </div>
     <script src="asset/script/themeDark.js"></script>
