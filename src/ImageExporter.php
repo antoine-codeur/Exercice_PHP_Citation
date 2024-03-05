@@ -1,8 +1,9 @@
 <?php
 class ImageExporter {
-    public static function exporterEnImage($texte, $cheminPolice, $cheminSortie, $imageSize = 400) {
+    public static function exporterEnImage($texte, $cheminPolice, $cheminSortie, $imageSize = 500) {
         $image = imagecreatetruecolor($imageSize, $imageSize);
-        if (rand(0, 4) > 0) {
+        if (rand(0, 4) > 0) { // Paramétrage random
+            // Paramétrage fond en dégradé
             $couleurDebut = imagecolorallocate($image, rand(0, 255), rand(0, 255), rand(0, 255));
             $couleurFin = imagecolorallocate($image, rand(0, 255), rand(0, 255), rand(0, 255));
             for ($y = 0; $y <= $imageSize; $y++) {
@@ -12,16 +13,17 @@ class ImageExporter {
                 $couleurLigne = imagecolorallocate($image, $r, $g, $b);
                 imageline($image, 0, $y, $imageSize, $y, $couleurLigne);
             }
-        } else {
+        } else { // Paramétrage fond uni
             $couleurFond = imagecolorallocate($image, rand(0, 255), rand(0, 255), rand(0, 255));
             imagefill($image, 0, 0, $couleurFond);
         }
-        do {
+        do { // Paramétrage text selon le fond pour assurer une lisibilité
             $couleurTexte = imagecolorallocate($image, rand(0, 255), rand(0, 255), rand(0, 255));
             $luminositeTexte = (($couleurTexte >> 16 & 0xFF) + ($couleurTexte >> 8 & 0xFF) + ($couleurTexte & 0xFF)) / 3;
             $luminositeFond = isset($r) ? (($r + $g + $b) / 3) : (($couleurFond >> 16 & 0xFF) + ($couleurFond >> 8 & 0xFF) + ($couleurFond & 0xFF)) / 3;
         } while (abs($luminositeFond - $luminositeTexte) < 100);
 
+        // Paramétrage de mise à la ligne du texte et du choix de la police
         $taillePolice = 20;
         $marge = 10;
         $ligneHauteur = $taillePolice * 1.5;
