@@ -1,8 +1,19 @@
 <?php
 class CitationGenerator {
-    private $debut = ['La vie est', 'Le monde est', 'L\'aventure est'];
-    private $milieu = ['une quête', 'un voyage', 'une cascade de choix'];
-    private $fin = ['sans fin.', 'plein de surprises.', 'que nous forgeons.'];
+    private $debut;
+    private $milieu;
+    private $fin;
+
+    public function __construct() {
+        $jsonPath = __DIR__ . '/fragments.json';
+        $jsonContent = file_get_contents($jsonPath);
+        $fragments = json_decode($jsonContent, true);
+
+    
+        $this->debut = $fragments['debut'];
+        $this->milieu = $fragments['mid'];
+        $this->fin = $fragments['fin'];
+    }
 
     public function genererCitation() {
         $partie1 = $this->debut[array_rand($this->debut)];
