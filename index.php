@@ -53,8 +53,13 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
             <input type="hidden" name="generate" value="1">
             <button id="Gen_Button" type="button">Générer des Citations</button>
         </form>
-
-        <?php include 'asset/template/Citation.php'; ?>
+        <?php if (!empty($citations)): ?>
+            <div id="citation_result">
+                <?php foreach ($citations as $item): ?>
+                    <?php include 'asset/template/Citation.php'; ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
 
     </div>
     <script src="asset/script/AJAX_CITATION.js"></script>
